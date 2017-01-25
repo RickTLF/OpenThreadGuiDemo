@@ -35,11 +35,19 @@ inputBox.grid(row=0, column=1, sticky=W)
 # Get the text inserted and print in console.
 def printEntry():
     inputEntry = inputBox.get()
+    # Check to see if the string value is the same
+    if inputEntry == "Done":
+        print('TRUE')
+    else:
+        print('FALSE')
+
     # check to see if the textbox is empty
-    if len(inputEntry)==0:
+    '''if len(inputEntry)==0:
         print('Nothing inserted')
     else:
-        print(inputEntry)
+        print(inputEntry)'''
+
+
 
 button = Button(root, text="Button", fg="black", command=printEntry)
 button.config(width="15")
