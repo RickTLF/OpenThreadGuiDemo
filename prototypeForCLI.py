@@ -41,6 +41,11 @@ for item in ["listItem1", "listItem2"]:
 
 listBox.grid(row=2, column=0, columnspan=1)
 
+# Create a button
+button = Button(root, text="Button", fg="black")
+button.config(width="15")
+button.grid(row=3, column=0, columnspan=1, padx=5, pady=5)
+
 root.grid()
 root.mainloop()
 ###################################################
