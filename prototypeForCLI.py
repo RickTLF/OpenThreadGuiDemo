@@ -50,6 +50,24 @@ button.grid(row=3, column=0, columnspan=1, padx=5, pady=5)
 label = Label(root, text="Label", fg="black")
 label.grid(row=4, sticky=W)
 
+# Create a table
+blankLabel = Label(root, text="", fg="black")
+blankLabel.grid(row=5, sticky=W, columnspan=2)
+
+#for i in range(0,2):
+thisRow = 0
+
+for j in range(0,6):
+    tableCel = Entry(root, width="10")
+    tableCel.insert(0, 'cel ' + str(j))
+    tableCel.config(state=DISABLED)
+    tableCel.config(disabledbackground="white")
+    tableCel.config(disabledforeground="black")
+    if j%3 == 0:
+        thisRow+=1
+
+    tableCel.grid(row=thisRow, column=j%3, columnspan=1, in_=blankLabel)
+
 root.grid()
 root.mainloop()
 ###################################################
