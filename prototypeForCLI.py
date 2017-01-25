@@ -10,10 +10,13 @@
 
 # Imports
 from tkinter import *
+import serial
+
 import tkinter.ttk as ttk
 
 # Global variables
 root = Tk()
+ser = serial.Serial('\\.\COM5', 115200, timeout=1)
 
 ###################################################
 # SETUP
@@ -56,9 +59,14 @@ def printEntry():
     else:
         print(inputEntry)'''
 
+# User Serial port to transmit a command.
+def transmitCommand():
+    inputEntry = inputBox.get() + '\n'
+    ser.write(inputEntry.encode('ascii'))
+    print(inputEntry)
+    ser.close()
 
-
-button = Button(root, text="Button", fg="black", command=printEntry)
+button = Button(root, text="Button", fg="black", command=transmitCommand)
 button.config(width="15")
 button.grid(row=0, column=2, padx=5, pady=5)
 
@@ -74,6 +82,13 @@ for item in ["listItem1", "listItem2"]:
 listBox.grid(row=2, column=0, columnspan=1)
 
 # Create a table
+
+'''
+First create a blank label.
+The empty label serves no real purpose.
+The blank label is used to act as a container,
+A container for another grid.
+'''
 blankLabel = Label(root, text="", fg="black")
 blankLabel.grid(row=5, sticky=W, columnspan=2)
 
