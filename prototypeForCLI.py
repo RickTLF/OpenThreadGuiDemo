@@ -26,13 +26,18 @@ root.title('OpenThread GUI demo Avans')
 # MAIN
 ###################################################
 
-
 # Add a label, textBox and a button
 label = Label(root, text="Label", fg="black")
 label.grid(row=0, sticky=W)
 inputBox = Entry(root, width="20")
 inputBox.grid(row=0, column=1, sticky=W)
-button = Button(root, text="Button", fg="black")
+
+# Get the text inserted and print in console.
+def printEntry():
+    inputEntry = inputBox.get()
+    print(inputEntry)
+
+button = Button(root, text="Button", fg="black", command=printEntry)
 button.config(width="15")
 button.grid(row=0, column=2, padx=5, pady=5)
 
@@ -64,7 +69,6 @@ for j in range(0,6):
         thisRow+=1
 
     tableCel.grid(row=thisRow, column=j%3, columnspan=1, in_=blankLabel)
-
 
 root.grid()
 root.mainloop()
