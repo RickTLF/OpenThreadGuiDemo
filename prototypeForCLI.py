@@ -26,13 +26,19 @@ root.title('OpenThread GUI demo Avans')
 # MAIN
 ###################################################
 
-# Add textbox
+
+# Add a label, textBox and a button
+label = Label(root, text="Label", fg="black")
+label.grid(row=0, sticky=W)
 inputBox = Entry(root, width="20")
-inputBox.grid(row=0, column=0, columnspan=1)
+inputBox.grid(row=0, column=1, sticky=W)
+button = Button(root, text="Button", fg="black")
+button.config(width="15")
+button.grid(row=0, column=2, padx=5, pady=5)
 
 # Add a text-area representing the output
 threadNetworkScanResults = Text(root, height=5, width=20)
-threadNetworkScanResults.grid(row=1, column=0, columnspan=1)
+threadNetworkScanResults.grid(row=1, column=0, columnspan=2)
 
 # Add a listbox
 listBox = Listbox(root)
@@ -40,15 +46,6 @@ for item in ["listItem1", "listItem2"]:
     listBox.insert(END, item)
 
 listBox.grid(row=2, column=0, columnspan=1)
-
-# Create a button
-button = Button(root, text="Button", fg="black")
-button.config(width="15")
-button.grid(row=3, column=0, columnspan=1, padx=5, pady=5)
-
-# Add a label
-label = Label(root, text="Label", fg="black")
-label.grid(row=4, sticky=W)
 
 # Create a table
 blankLabel = Label(root, text="", fg="black")
@@ -67,6 +64,7 @@ for j in range(0,6):
         thisRow+=1
 
     tableCel.grid(row=thisRow, column=j%3, columnspan=1, in_=blankLabel)
+
 
 root.grid()
 root.mainloop()

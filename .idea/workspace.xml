@@ -20,8 +20,8 @@
       <file leaf-file-name="prototypeForCLI.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/prototypeForCLI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="64" column="47" lean-forward="true" selection-start-line="64" selection-start-column="47" selection-end-line="64" selection-end-column="47" />
+            <state relative-caret-position="322">
+              <caret line="36" column="44" lean-forward="true" selection-start-line="36" selection-start-column="44" selection-end-line="36" selection-end-column="44" />
               <folding>
                 <element signature="e#297#318#0" expanded="true" />
               </folding>
@@ -683,8 +683,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/prototypeForCLI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="64" column="47" lean-forward="true" selection-start-line="64" selection-start-column="47" selection-end-line="64" selection-end-column="47" />
+        <state relative-caret-position="322">
+          <caret line="36" column="44" lean-forward="true" selection-start-line="36" selection-start-column="44" selection-end-line="36" selection-end-column="44" />
           <folding>
             <element signature="e#297#318#0" expanded="true" />
           </folding>
