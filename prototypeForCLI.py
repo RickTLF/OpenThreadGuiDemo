@@ -11,12 +11,15 @@
 # Imports
 from tkinter import *
 import serial
+import tkinter.messagebox
 
 import tkinter.ttk as ttk
 
 # Global variables
 root = Tk()
 ser = serial.Serial('\\.\COM5', 115200, timeout=1)
+menu = Menu(root)
+subMenu = Menu(menu)
 
 ###################################################
 # SETUP
@@ -24,6 +27,7 @@ ser = serial.Serial('\\.\COM5', 115200, timeout=1)
 
 root.minsize(400, 300)
 root.title('OpenThread GUI demo Avans')
+root.config(menu=menu)
 
 ###################################################
 # MAIN
@@ -64,7 +68,37 @@ def transmitCommand():
     inputEntry = inputBox.get() + '\n'
     ser.write(inputEntry.encode('ascii'))
     print(inputEntry)
-    ser.close()
+    receiveData()
+
+def receiveData():
+    readed = 1
+    while (readed > 0):
+        buf = [0] * 10
+        readed = ser.readinto(buf)
+        print(bytearray(buf).decode("ascii"))
+        #print(bytearray(buf).decode("ascii"))
+    #if serData == 'Done\n':
+        #ser.close()
+
+def shutdown():
+    answer = tkinter.messagebox.askquestion('Exit', 'Are you sure?')
+    if answer == 'yes':
+        ser.close()
+        root.destroy()
+
+def doNothing():
+    print("Ok ok I won't.")
+
+
+menu.add_cascade(label="file", menu=subMenu)
+subMenu.add_command(label="new project...", command=doNothing)
+subMenu.add_command(label="new...", command=doNothing)
+subMenu.add_separator()
+subMenu.add_command(label="Exit", command=shutdown)
+
+editMenu = Menu(menu)
+menu.add_cascade(label="Edit", menu=editMenu)
+menu.add_command(label="Redo", command=doNothing)
 
 button = Button(root, text="Button", fg="black", command=transmitCommand)
 button.config(width="15")
