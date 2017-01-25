@@ -29,6 +29,11 @@ root.title('OpenThread GUI demo Avans')
 inputBox = Entry(root, width="20")
 inputBox.grid(row=1, column=1, columnspan=3)
 
+# Add a text-area representing the output
+threadNetworkScanResults = Text(root, height=5, width=20)
+threadNetworkScanResults.grid(row=8, column=1, columnspan=3)
+
+
 root.grid()
 root.mainloop()
 ###################################################
