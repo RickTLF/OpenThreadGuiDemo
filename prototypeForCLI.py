@@ -68,14 +68,16 @@ def transmitCommand():
     inputEntry = inputBox.get() + '\n'
     ser.write(inputEntry.encode('ascii'))
     print(inputEntry)
-    receiveData()
+    receiveData(inputEntry)
 
-def receiveData():
+def receiveData(lastCommand):
     readed = 1
     while (readed > 0):
         buf = [0] * 10
         readed = ser.readinto(buf)
-        print(bytearray(buf).decode("ascii"))
+        dataString = bytearray(buf).decode("ascii")
+        print(dataString[0:len(lastCommand)])
+        # print(dataString)
         #print(bytearray(buf).decode("ascii"))
     #if serData == 'Done\n':
         #ser.close()
