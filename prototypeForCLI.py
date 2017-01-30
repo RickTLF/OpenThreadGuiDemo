@@ -70,13 +70,37 @@ def transmitCommand():
     print(inputEntry)
     receiveData(inputEntry)
 
+'''def receiveDataString(lastCommand):
+    buf = receiveData(lastCommand)
+    dataString = bytearray(buf).decode("ascii")'''
+
 def receiveData(lastCommand):
-    readed = 1
-    while (readed > 0):
-        buf = [0] * 10
-        readed = ser.readinto(buf)
+    buf = [10] * 1
+    dataReceived = 1;
+    stringBuffer = ""
+    while (dataReceived > 0):
+        dataReceived = ser.readinto(buf)
         dataString = bytearray(buf).decode("ascii")
-        print(dataString[0:len(lastCommand)])
+        if ("-" != dataString):
+            if ("+" != dataString):
+                if ("|" != dataString):
+                    if (" " != dataString):
+                        stringBuffer+=dataString
+
+        #print(dataString)
+        #print(dataReceived)
+        #print(stringBuffer)
+
+    if (dataReceived == 0):
+
+        print(stringBuffer)
+
+    # readed = 1
+    # while (readed > 0):
+        #buf = [0] * 10
+        #readed = ser.readinto(buf)
+        #dataString = bytearray(buf).decode("ascii")
+        #print(dataString)
         # print(dataString)
         #print(bytearray(buf).decode("ascii"))
     #if serData == 'Done\n':
@@ -91,6 +115,7 @@ def shutdown():
 def doNothing():
     print("Ok ok I won't.")
 
+# MENU
 
 menu.add_cascade(label="file", menu=subMenu)
 subMenu.add_command(label="new project...", command=doNothing)
@@ -101,6 +126,8 @@ subMenu.add_command(label="Exit", command=shutdown)
 editMenu = Menu(menu)
 menu.add_cascade(label="Edit", menu=editMenu)
 menu.add_command(label="Redo", command=doNothing)
+
+# TRANSMISSION
 
 button = Button(root, text="Button", fg="black", command=transmitCommand)
 button.config(width="15")
