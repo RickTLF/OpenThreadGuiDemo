@@ -76,24 +76,75 @@ def transmitCommand():
 
 def receiveData(lastCommand):
     buf = [10] * 1
-    dataReceived = 1;
+    dataBuffer = [200]
+    dataReceived = 1
     stringBuffer = ""
+    i = 0
+    characterCount = 0
+    ssr = "" #used to place the final string in here
+
+    # The following vars are meant to detect whether there is a space in
+    # between two letters. If so, the space should be included when appending
+    # the character to the string.
+
+    # example: Network Name
+
+    # Between k and N is a space, so the space between k and N must be saved.
+
+    # The rest of the spaces should be neglected.
+    firstStringChar = ""
+    secondStringChar = ""
+    countCharactersInBetween = 0
+
+
     while (dataReceived > 0):
         dataReceived = ser.readinto(buf)
         dataString = bytearray(buf).decode("ascii")
         if ("-" != dataString):
             if ("+" != dataString):
                 if ("|" != dataString):
-                    if (" " != dataString):
-                        stringBuffer+=dataString
+                    if "| " != dataString:
+                        if " |" != dataString:
+                            if (dataString == " "):  # Detect space and save the occurance.
+                                if (characterCount > 0):
+                                    firstStringChar = 1;    # It is true that a space has been detected
+                                characterCount=1
+                            elif (dataString != " "):   # Now wait for a character not to be a space.
+                                if (firstStringChar == 1):  # Is it true that a space has been detected early on?
+                                    stringBuffer += " "     # Add space between the next character and the previous one.
+                                    firstStringChar = 0     # Repeat detection.
+                                    #characterCount = 0
+                                stringBuffer += dataString  # Proceed to add character that is not space. characterCount += 1
+
+
+                        #if " " != dataString:
+
+                elif ("|" == dataString):
+                    if (stringBuffer != lastCommand +'\n\n'):
+                        if (stringBuffer[0] != " "):
+                            dataBuffer.append(stringBuffer)
+                        else:
+                            dataBuffer.append(stringBuffer[1:len(stringBuffer)])
+
+                    #print(stringBuffer)
+                    stringBuffer = ""
+                    characterCount = 0
+
+    '''for e in dataBuffer:
+        print("array contents: ")
+        print(e)'''
+
+    print(dataBuffer[2:len(dataBuffer)])
+
+    #print(str(characterCount) + '\n')
 
         #print(dataString)
         #print(dataReceived)
         #print(stringBuffer)
 
-    if (dataReceived == 0):
+    #if (dataReceived == 0):
 
-        print(stringBuffer)
+        #print(stringBuffer)
 
     # readed = 1
     # while (readed > 0):
