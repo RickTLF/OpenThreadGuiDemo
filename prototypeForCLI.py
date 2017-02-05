@@ -1,21 +1,30 @@
-####################################################
+#//////////////////////////////////////////////////
+#--------------------------------------------------
 # OPENTHREAD GUI DEMO
+#--------------------------------------------------
+#//////////////////////////////////////////////////
 #
 # Developer     :   Rick Kock
 # Date          :   25/01/2017
 # Team members  :   David de Prez, Tim Spaans
 # Institution   :   Avans Hogeschool, Den Bosch
 #
-###################################################
+#//////////////////////////////////////////////////
 
+#--------------------------------------------------
 # Imports
-from tkinter import *
+#--------------------------------------------------
 import serial
-import tkinter.messagebox
+from sandScoop import *
+import sandScoop
+#--------------------------------------------------
 
-import tkinter.ttk as ttk
 
+
+'''
 # Global variables
+globalBuffer = ["Hello world!", "What are you doing?", "Does this fit?", "No it does not",
+                "What do you suggest you do?", "Setting standards", "Good idea.", "Natasha."]
 root = Tk()
 ser = serial.Serial('\\.\COM5', 115200, timeout=1)
 menu = Menu(root)
@@ -48,31 +57,35 @@ def printEntry():
     # Itterate through strings checking each character
     for i in range(0, len(inputEntry)):
         print(inputEntry[i])
-        '''print(inputEntry[1])
-        print(inputEntry[2])
-        print(inputEntry[3])'''
+        # print(inputEntry[1])
+        # print(inputEntry[2])
+        # print(inputEntry[3])
 
-    '''if inputEntry == "Done":
-        print('TRUE')
-    else:
-        print('FALSE')'''
+    # if inputEntry == "Done":
+        # print('TRUE')
+    # else:
+    #    print('FALSE')
 
     # check to see if the textbox is empty
-    '''if len(inputEntry)==0:
-        print('Nothing inserted')
-    else:
-        print(inputEntry)'''
+    # if len(inputEntry)==0:
+        #print('Nothing inserted')
+    # else:
+        #print(inputEntry)
 
 # User Serial port to transmit a command.
 def transmitCommand():
+    # for i in range(0,2):
+
+
     inputEntry = inputBox.get() + '\n'
     ser.write(inputEntry.encode('ascii'))
-    print(inputEntry)
-    receiveData(inputEntry)
+    #print(inputEntry)
+    print(receiveData(inputEntry))
+    globalBuffer = receiveData(inputEntry)
 
-'''def receiveDataString(lastCommand):
-    buf = receiveData(lastCommand)
-    dataString = bytearray(buf).decode("ascii")'''
+    # def receiveDataString(lastCommand):
+    # buf = receiveData(lastCommand)
+    # dataString = bytearray(buf).decode("ascii")
 
 def receiveData(lastCommand):
     buf = [10] * 1
@@ -130,11 +143,11 @@ def receiveData(lastCommand):
                     stringBuffer = ""
                     characterCount = 0
 
-    '''for e in dataBuffer:
-        print("array contents: ")
-        print(e)'''
+    # for e in dataBuffer:
+    # print("array contents: ")
+    # print(e)
 
-    print(dataBuffer[2:len(dataBuffer)])
+    return dataBuffer[2:len(dataBuffer)]
 
     #print(str(characterCount) + '\n')
 
@@ -197,29 +210,55 @@ listBox.grid(row=2, column=0, columnspan=1)
 
 # Create a table
 
-'''
-First create a blank label.
-The empty label serves no real purpose.
-The blank label is used to act as a container,
-A container for another grid.
-'''
+
+# First create a blank label.
+# The empty label serves no real purpose.
+# The blank label is used to act as a container,
+# A container for another grid.
+
 blankLabel = Label(root, text="", fg="black")
 blankLabel.grid(row=5, sticky=W, columnspan=2)
 
-#for i in range(0,2):
-thisRow = 0
+def draw():
+    for j in range(0, len(globalBuffer)):
+        thisRow = 0
+        tableCel = Entry(root, width="10")
+        tableCel.insert(0, globalBuffer[j])  # str(j))
+        tableCel.config(state=DISABLED)
+        tableCel.config(disabledbackground="white")
+        tableCel.config(disabledforeground="black")
+        if j % 4 == 0:
+            thisRow += 1
+        tableCel.grid(row=thisRow, column=j % 4, columnspan=1, in_=blankLabel)
+        root.after(1000, draw)
 
-for j in range(0,6):
-    tableCel = Entry(root, width="10")
-    tableCel.insert(0, 'cel ' + str(j))
-    tableCel.config(state=DISABLED)
-    tableCel.config(disabledbackground="white")
-    tableCel.config(disabledforeground="black")
-    if j%3 == 0:
-        thisRow+=1
+draw()'''
 
-    tableCel.grid(row=thisRow, column=j%3, columnspan=1, in_=blankLabel)
+print(sandScoop.__doc__)
 
-root.grid()
-root.mainloop()
-###################################################
+bgColor = '#330033'
+
+def printSomething():
+    print("Yellow world!")
+
+# gui setup
+dialog_gui = SandScoop('the title', 400, 300)
+dialog_gui.addLabel('some Text', 0, 0)
+dialog_gui.addInputBox('20', 0, 1)
+dialog_gui.addButton('submit', 0, 2, printSomething)
+
+dialog_gui.addLabel('some Text', 1, 0)
+dialog_gui.addInputBox('20', 1, 1)
+dialog_gui.addButton('submit', 1, 2, printSomething)
+
+dialog_gui.addLabel('some Text', 2, 0)
+dialog_gui.addInputBox('20', 2, 1)
+dialog_gui.addButton('submit', 2, 2, printSomething)
+
+def doNothing():
+    print("Do nothing.")
+
+dialog_gui.addMenu("File", 0)
+
+dialog_gui.createGui()
+print(dialog_gui.createGui.__doc__)
