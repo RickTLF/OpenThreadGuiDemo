@@ -19,221 +19,6 @@ from sandScoop import *
 import sandScoop
 #--------------------------------------------------
 
-
-
-'''
-# Global variables
-globalBuffer = ["Hello world!", "What are you doing?", "Does this fit?", "No it does not",
-                "What do you suggest you do?", "Setting standards", "Good idea.", "Natasha."]
-root = Tk()
-ser = serial.Serial('\\.\COM5', 115200, timeout=1)
-menu = Menu(root)
-subMenu = Menu(menu)
-
-###################################################
-# SETUP
-###################################################
-
-root.minsize(400, 300)
-root.title('OpenThread GUI demo Avans')
-root.config(menu=menu)
-
-###################################################
-# MAIN
-###################################################
-
-# Add a label, textBox and a button
-label = Label(root, text="Label", fg="black")
-label.grid(row=0, sticky=W)
-inputBox = Entry(root, width="20")
-inputBox.grid(row=0, column=1, sticky=W)
-
-# Get the text inserted and print in console.
-def printEntry():
-    inputEntry = inputBox.get()
-
-    print(inputEntry)
-
-    # Itterate through strings checking each character
-    for i in range(0, len(inputEntry)):
-        print(inputEntry[i])
-        # print(inputEntry[1])
-        # print(inputEntry[2])
-        # print(inputEntry[3])
-
-    # if inputEntry == "Done":
-        # print('TRUE')
-    # else:
-    #    print('FALSE')
-
-    # check to see if the textbox is empty
-    # if len(inputEntry)==0:
-        #print('Nothing inserted')
-    # else:
-        #print(inputEntry)
-
-# User Serial port to transmit a command.
-def transmitCommand():
-    # for i in range(0,2):
-
-
-    inputEntry = inputBox.get() + '\n'
-    ser.write(inputEntry.encode('ascii'))
-    #print(inputEntry)
-    print(receiveData(inputEntry))
-    globalBuffer = receiveData(inputEntry)
-
-    # def receiveDataString(lastCommand):
-    # buf = receiveData(lastCommand)
-    # dataString = bytearray(buf).decode("ascii")
-
-def receiveData(lastCommand):
-    buf = [10] * 1
-    dataBuffer = [200]
-    dataReceived = 1
-    stringBuffer = ""
-    i = 0
-    characterCount = 0
-    ssr = "" #used to place the final string in here
-
-    # The following vars are meant to detect whether there is a space in
-    # between two letters. If so, the space should be included when appending
-    # the character to the string.
-
-    # example: Network Name
-
-    # Between k and N is a space, so the space between k and N must be saved.
-
-    # The rest of the spaces should be neglected.
-    firstStringChar = ""
-    secondStringChar = ""
-    countCharactersInBetween = 0
-
-
-    while (dataReceived > 0):
-        dataReceived = ser.readinto(buf)
-        dataString = bytearray(buf).decode("ascii")
-        if ("-" != dataString):
-            if ("+" != dataString):
-                if ("|" != dataString):
-                    if "| " != dataString:
-                        if " |" != dataString:
-                            if (dataString == " "):  # Detect space and save the occurance.
-                                if (characterCount > 0):
-                                    firstStringChar = 1;    # It is true that a space has been detected
-                                characterCount=1
-                            elif (dataString != " "):   # Now wait for a character not to be a space.
-                                if (firstStringChar == 1):  # Is it true that a space has been detected early on?
-                                    stringBuffer += " "     # Add space between the next character and the previous one.
-                                    firstStringChar = 0     # Repeat detection.
-                                    #characterCount = 0
-                                stringBuffer += dataString  # Proceed to add character that is not space. characterCount += 1
-
-
-                        #if " " != dataString:
-
-                elif ("|" == dataString):
-                    if (stringBuffer != lastCommand +'\n\n'):
-                        if (stringBuffer[0] != " "):
-                            dataBuffer.append(stringBuffer)
-                        else:
-                            dataBuffer.append(stringBuffer[1:len(stringBuffer)])
-
-                    #print(stringBuffer)
-                    stringBuffer = ""
-                    characterCount = 0
-
-    # for e in dataBuffer:
-    # print("array contents: ")
-    # print(e)
-
-    return dataBuffer[2:len(dataBuffer)]
-
-    #print(str(characterCount) + '\n')
-
-        #print(dataString)
-        #print(dataReceived)
-        #print(stringBuffer)
-
-    #if (dataReceived == 0):
-
-        #print(stringBuffer)
-
-    # readed = 1
-    # while (readed > 0):
-        #buf = [0] * 10
-        #readed = ser.readinto(buf)
-        #dataString = bytearray(buf).decode("ascii")
-        #print(dataString)
-        # print(dataString)
-        #print(bytearray(buf).decode("ascii"))
-    #if serData == 'Done\n':
-        #ser.close()
-
-def shutdown():
-    answer = tkinter.messagebox.askquestion('Exit', 'Are you sure?')
-    if answer == 'yes':
-        ser.close()
-        root.destroy()
-
-def doNothing():
-    print("Ok ok I won't.")
-
-# MENU
-
-menu.add_cascade(label="file", menu=subMenu)
-subMenu.add_command(label="new project...", command=doNothing)
-subMenu.add_command(label="new...", command=doNothing)
-subMenu.add_separator()
-subMenu.add_command(label="Exit", command=shutdown)
-
-editMenu = Menu(menu)
-menu.add_cascade(label="Edit", menu=editMenu)
-menu.add_command(label="Redo", command=doNothing)
-
-# TRANSMISSION
-
-button = Button(root, text="Button", fg="black", command=transmitCommand)
-button.config(width="15")
-button.grid(row=0, column=2, padx=5, pady=5)
-
-# Add a text-area representing the output
-threadNetworkScanResults = Text(root, height=5, width=20)
-threadNetworkScanResults.grid(row=1, column=0, columnspan=2)
-
-# Add a listbox
-listBox = Listbox(root)
-for item in ["listItem1", "listItem2"]:
-    listBox.insert(END, item)
-
-listBox.grid(row=2, column=0, columnspan=1)
-
-# Create a table
-
-
-# First create a blank label.
-# The empty label serves no real purpose.
-# The blank label is used to act as a container,
-# A container for another grid.
-
-blankLabel = Label(root, text="", fg="black")
-blankLabel.grid(row=5, sticky=W, columnspan=2)
-
-def draw():
-    for j in range(0, len(globalBuffer)):
-        thisRow = 0
-        tableCel = Entry(root, width="10")
-        tableCel.insert(0, globalBuffer[j])  # str(j))
-        tableCel.config(state=DISABLED)
-        tableCel.config(disabledbackground="white")
-        tableCel.config(disabledforeground="black")
-        if j % 4 == 0:
-            thisRow += 1
-        tableCel.grid(row=thisRow, column=j % 4, columnspan=1, in_=blankLabel)
-        root.after(1000, draw)
-
-draw()'''
-
 print(sandScoop.__doc__)
 
 bgColor = '#330033'
@@ -242,8 +27,10 @@ def printSomething():
     print("Yellow world!")
 
 # gui setup
-dialog_gui = SandScoop('the title', 400, 300)
-dialog_gui.addLabel('some Text', 0, 0)
+dialog_gui = SandScoop('the title', 200, 200)
+dialog_gui.addTabs()
+
+'''dialog_gui.addLabel('some Text', 0, 0)
 dialog_gui.addInputBox('20', 0, 1)
 dialog_gui.addButton('submit', 0, 2, printSomething)
 
@@ -255,10 +42,14 @@ dialog_gui.addLabel('some Text', 2, 0)
 dialog_gui.addInputBox('20', 2, 1)
 dialog_gui.addButton('submit', 2, 2, printSomething)
 
+dialog_gui.createTable(3, 16, 4)'''
+
 def doNothing():
     print("Do nothing.")
 
 dialog_gui.addMenu("File", 0)
 
 dialog_gui.createGui()
-print(dialog_gui.createGui.__doc__)
+#print(dialog_gui.createGui.__doc__)
+
+

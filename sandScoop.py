@@ -1,5 +1,3 @@
-#from tkinter import *
-
 """
 //////////////////////////////////////////////////
 --------------------------------------------------
@@ -14,8 +12,14 @@ Institution   :   Avans Hogeschool, Den Bosch
 
 //////////////////////////////////////////////////
 """
+
+from tkinter import ttk
 from tkinter import *
 import tkinter.messagebox
+from tkinter.scrolledtext import ScrolledText
+
+#TODO: Add panes for widgets!
+#TODO: Add labelFrame!
 
 class SandScoop:
     cntMenuItems = 0
@@ -43,6 +47,17 @@ class SandScoop:
 
     def __doNothing(self):
         print("Ok ok I won't.")
+
+    def addTabs(self):
+        nb = ttk.Notebook(self.root)
+        page1 = ttk.Frame(nb)
+        # second page
+        page2 = ttk.Frame(nb)
+        text = ScrolledText(page2)
+        text.pack(expand=1, fill="both")
+        nb.add(page1, text='One')
+        nb.add(page2, text='Two')
+        nb.pack(expand=1, fill="both")
 
     def addMenu(self, text, cnt=1):
         self.cntMenuItems = cnt
@@ -87,3 +102,17 @@ class SandScoop:
         """
         self.root.grid()
         self.root.mainloop()
+
+    def createTable(self, row, maxCells, maxCol):
+        blankLabel = Label(self.root, text="", fg="black")
+        blankLabel.grid(row=row, sticky=W, columnspan=2)
+        thisRow = 0
+        for j in range(0, maxCells):
+            tableCel = Entry(self.root, width="10")
+            tableCel.insert(0, str(j))
+            tableCel.config(state=DISABLED)
+            tableCel.config(disabledbackground="white")
+            tableCel.config(disabledforeground="black")
+            if j % 4 == 0:
+                thisRow += 1
+            tableCel.grid(row=thisRow, column=j % maxCol, columnspan=1, in_=blankLabel)
