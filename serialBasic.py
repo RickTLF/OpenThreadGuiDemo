@@ -28,74 +28,82 @@ class SandScoop:
     def __init__(self):
         #self.root.
 
-    def validateStrings(self):
+    def validateStrings(self, input):
         """
         --------------------------------------------------
-        setup
+        validateStrings()
         --------------------------------------------------
-        Setup the program GUI.
-        --------------------------------------------------
-        """
-
-    def getLastError(self):
-        """
-        --------------------------------------------------
-        setup
-        --------------------------------------------------
-        Setup the program GUI.
+        First make sure that the data sent is valid before
+        it can be transmitted.
         --------------------------------------------------
         """
 
     def transmitData(self, command):
         """
         --------------------------------------------------
-        setup
+        transmitData()
         --------------------------------------------------
-        Setup the program GUI.
+        Transmit data using pySerial. While waiting to
+        receive the 'Done' keyword, no other data should
+        be transmitted. This process should not be
+        interfered. However, note that this may not be
+        the final solution.
         --------------------------------------------------
         """
 
     def receiveData(self):
         """
         --------------------------------------------------
-        setup
+        receiveData()
         --------------------------------------------------
-        Setup the program GUI.
+        As you receive data from a device, add the data
+        to a buffer. skip the command you've sent which
+        will (probably) also be included in the buffer.
+        Receive data until wait() returns false.
         --------------------------------------------------
         """
 
     def wait(self, keyword):
         """
         --------------------------------------------------
-        setup
+        wait()
         --------------------------------------------------
-        Setup the program GUI.
+        Wait for a particular keyword to be received. Once
+        received, it means you've received all the data
+        from the device and the program may proceed.
         --------------------------------------------------
         """
 
     def addDataToBuffer(self):
         """
         --------------------------------------------------
-        setup
+        addDataToBuffer()
         --------------------------------------------------
-        Setup the program GUI.
+        This method converts the byte values to string
+        values and adds them to buffer.
         --------------------------------------------------
         """
 
     def transmitBufferCommands(self):
         """
         --------------------------------------------------
-        setup
+        transmitBufferCommands()
         --------------------------------------------------
-        Setup the program GUI.
+        Transmit commands to the corresponding device.
+        This method uses an array of commands and sends
+        transmits them to a device using a loop. This
+        method is usually used when updating data that
+        need to bee updated after a given time.
         --------------------------------------------------
         """
 
-    def areAllCommandsTransmitted(self):
+    def areAllCommandsTransmitted(self, lastKeyword, cntCommands):
         """
         --------------------------------------------------
-        setup
+        areAllCommandsTransmitted()
         --------------------------------------------------
-        Setup the program GUI.
+        Checks to see if all commands that have been
+        transmitted by waiting for the last keyword
+        received.
         --------------------------------------------------
         """

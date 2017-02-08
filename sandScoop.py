@@ -28,25 +28,37 @@ class SandScoop:
         --------------------------------------------------
         displayConfigFrame
         --------------------------------------------------
-        Setup the program GUI.
+        Displays the configuration frame. Ussualy used by
+        the user the first time the program runs.
+        The user may want to configure the network name,
+        channel, child timeout etc.
         --------------------------------------------------
         """
 
-    def displayNetworkFrame(self):
+
+    def displayNetworkInfoFrame(self):
         """
         --------------------------------------------------
         displayNetworkFrame
         --------------------------------------------------
-        Setup the program GUI.
+        This frame displays network information. This
+        allows the user to view child children, list of
+        attached child ID's, routers etc. The user may
+        also be able to perform MLE discovery operations
+        and channel scans.
         --------------------------------------------------
         """
 
-    def displayLightingControl(self):
+    def displayLightingControlFrame(self):
         """
         --------------------------------------------------
         displayLightingControl
         --------------------------------------------------
-        Setup the program GUI.
+        This frame displays a list of all lights connected
+        to the Thread network. Furthermore, this frame
+        allows the user to simply control the light's
+        brightness and whether the light should be turned
+        on or off.
         --------------------------------------------------
         """
 
@@ -55,16 +67,7 @@ class SandScoop:
         --------------------------------------------------
         updateGui
         --------------------------------------------------
-        Setup the program GUI.
-        --------------------------------------------------
-        """
 
-    def saveWidgetId(self):
-        """
-        --------------------------------------------------
-        saveWidgetId
-        --------------------------------------------------
-        Setup the program GUI.
         --------------------------------------------------
         """
 
@@ -82,16 +85,21 @@ class SandScoop:
         --------------------------------------------------
         saveWidgetId
         --------------------------------------------------
-        Setup the program GUI.
+        Sometimes, only one widget should be updated after
+        receiving data. This method saves the
+        corresponding widget's id to later update the
+        widget itself. see updateWidget().
         --------------------------------------------------
         """
 
-    def updateWidget(self):
+    def updateWidget(self, id):
         """
         --------------------------------------------------
         updateWidget
         --------------------------------------------------
-        Setup the program GUI.
+        Updates the widget with the corresponding id. To
+        update a widget, make sure to first use the
+        daveWidget() method.
         --------------------------------------------------
         """
 
@@ -100,7 +108,8 @@ class SandScoop:
         --------------------------------------------------
         isButtonPressed
         --------------------------------------------------
-        Setup the program GUI.
+        Simple check to see whether or not a button has
+        been pressed or not.
         --------------------------------------------------
         """
 
@@ -109,7 +118,13 @@ class SandScoop:
         --------------------------------------------------
         validateInput
         --------------------------------------------------
-        Setup the program GUI.
+        Depending on the type of input being implemented,
+        Every input should be validated. If the user's
+        input is invalid, the program will generate an
+        error and won't proceed to transmit the command to
+        the corresponding device. The program will proceed
+        running normally, but the (last) error generated
+        will be displayed in the error pane.
         --------------------------------------------------
         """
 
@@ -118,7 +133,9 @@ class SandScoop:
         --------------------------------------------------
         updateProgramData
         --------------------------------------------------
-        Setup the program GUI.
+        Sometimes - after a time interval has elapsed for
+        example - the data needs to be updated but the
+        widgets of the current frame shouldn't.
         --------------------------------------------------
         """
 
