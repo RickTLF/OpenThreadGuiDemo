@@ -21,38 +21,18 @@ import threading
 #--------------------------------------------------
 # Global vars
 #--------------------------------------------------
-dialog_gui = SandScoop('Avans OpenThread Demo')
+bgColor = '#FFFFFF'  #'#330033'
+dialog_gui = SandScoop('Avans OpenThread Demo', bgColor)
 #--------------------------------------------------
 
-print(sandScoop.__doc__)
-
-#bgColor = '#330033'
-
-#def printSomething():
-    #print("Yellow world!")
-
-
 def setup():
-    """
-    --------------------------------------------------
-    setup
-    --------------------------------------------------
-    Setup the program GUI.
-    --------------------------------------------------
-    """
-
-    # gui setup
-
+    dialog_gui.displayTabs()
 
 def update():
-    """
-    --------------------------------------------------
-    createGui
-    --------------------------------------------------
-    Finally, put things together by using grid.
-    --------------------------------------------------
-    """
-    dialog_gui.createGui()
+    dialog_gui.constructGui()
+
+setup()
+update()
 
 '''dialog_gui.addLabel('some Text', 0, 0)
 dialog_gui.addInputBox('20', 0, 1)

@@ -1,3 +1,3 @@
 
 from sandScoop import SandScoop
-from serialBasic import SerialBasic
+from BasicCom import SerialBasic

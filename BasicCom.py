@@ -18,15 +18,12 @@ from tkinter import *
 import tkinter.messagebox
 from tkinter.scrolledtext import ScrolledText
 
-# TODO: Add panes for widgets!
-# TODO: Add labelFrame!
-
-class SandScoop:
+class BasicCom:
     stringBuffer = []
-    currentString = 'None'
+    currentString = ''
 
     def __init__(self):
-        #self.root.
+        self.currentString = 'None'
 
     def validateStrings(self, input):
         """
