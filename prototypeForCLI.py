@@ -9,52 +9,35 @@
 # Team members  :   David de Prez, Tim Spaans
 # Institution   :   Avans Hogeschool, Den Bosch
 #
+# Description:
+#
+# Base class and support functions implemented
+# by Computer engineering students of the Avans
+# Universety.
+#
+# This file is part of SandScoop.
+# https://github.com/RickTLF/OpenThreadGuiDemo
+# (C) 2017
+#
 #//////////////////////////////////////////////////
 
-#--------------------------------------------------
-# Imports
-#--------------------------------------------------
-import serial
+
 from sandScoop import *
 import sandScoop
 import threading
-#--------------------------------------------------
-# Global vars
-#--------------------------------------------------
-bgColor = '#FFFFFF'  #'#330033'
-dialog_gui = SandScoop('Avans OpenThread Demo', bgColor)
-#--------------------------------------------------
+#import serial
+import time
 
-def setup():
-    dialog_gui.displayTabs()
+from BasicCom import BasicCom
 
-def update():
-    dialog_gui.constructGui()
+ser = BasicCom('COM4', 9600)
+ser.transmitData('channel\n')
+print(ser.receiveData())
+ser.transmitData('help\n')
+print(ser.receiveData())
+ser.transmitData('networkname\n')
+print(ser.receiveData())
+ser.closeConnection()
 
-setup()
-update()
-
-'''dialog_gui.addLabel('some Text', 0, 0)
-dialog_gui.addInputBox('20', 0, 1)
-dialog_gui.addButton('submit', 0, 2, printSomething)
-
-dialog_gui.addLabel('some Text', 1, 0)
-dialog_gui.addInputBox('20', 1, 1)
-dialog_gui.addButton('submit', 1, 2, printSomething)
-
-dialog_gui.addLabel('some Text', 2, 0)
-dialog_gui.addInputBox('20', 2, 1)
-dialog_gui.addButton('submit', 2, 2, printSomething)
-
-dialog_gui.createTable(3, 16, 4)'''
-
-#dialog_gui.addMenu("File", 0)
-
-import tkinter as tk
-from tkinter import ttk
-
-
-#print(dialog_gui.createGui.__doc__)
-
-
-
+# reset_output_buffer()
+# reset_input_buffer()

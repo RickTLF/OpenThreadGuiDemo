@@ -18,6 +18,7 @@ from tkinter import *
 from functools import partial
 import tkinter.messagebox
 from tkinter.scrolledtext import ScrolledText
+from BasicCom import BasicCom
 
 class SandScoop:
     #style = ttk.Style()
@@ -33,6 +34,17 @@ class SandScoop:
     netInfoFrame = ttk.Frame(notebook)
     lightingControlFrame = ttk.Frame(notebook)
 
+    # Track the row has been last used
+    # in order to add another table.
+    currentFrameTableRow = 0
+
+    # Open serial connection
+    ser = 0
+
+    #//////////////////////////////////////////////////////////
+    #               PUBLIC FUNCTIONS
+    #//////////////////////////////////////////////////////////
+
     def __init__(self, thisTitle, color='white'):
         self.root.minsize(420, 350)
         self.root.maxsize(700, 500)
@@ -40,7 +52,7 @@ class SandScoop:
         self.root.configure(background=self.backgroundColor)
         self.root.title(thisTitle)
         self.__addMenu('File', 0)
-        #self.__addMenuItem('quit', self.__shutdown)
+        self.ser = BasicCom(5)
 
     def displayTabs(self):
         """
@@ -69,56 +81,9 @@ class SandScoop:
         self.notebook.add(self.netInfoFrame, text='Network information')
         self.notebook.add(self.lightingControlFrame, text='Lighting control')
         self.notebook.grid()
-
         self.__displayConfigScreen()
         self.__displayNetworkScreen()
-
-    def __displayNetworkScreen(self):
-        self.__createTable(0, 8, 4, 4)
-
-    def __displayConfigScreen(self):
-        """
-        --------------------------------------------------
-        __displayConfigScreen()
-        --------------------------------------------------
-        Displays the widgets represented on the
-        configuration screen.
-        --------------------------------------------------
-        """
-        commands = ["channel", "childmax", "childtimeout",
-                    "dataset delay", "dataset panid", "netdataregister",
-                    "dataset active", "extaddr", "masterkey"]
-
-        labels = ["Channel: ", "Max children: ", "Child timeout: ",
-                  "Timer delay: ", "Panid: ",
-                  "Register local network: ", "Active timestamp: "
-                  "Extended address: ", "Master key: "]
-
-        for cmd in range(0, len(commands) -1):
-            self.__addBaseInputComponent(self.configFrame, labels[cmd], cmd, command=lambda cmd=cmd: self.__doNothing(commands[cmd]))
-
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    def __addBaseInputComponent(self, parent, label, row, command):
-        self.__addLabel(parent, label, row, 0)
-        self.__addInputBox(parent, 20, row, 1)
-        self.__addButton(parent, "submit", row, 2, command)
-
-    def __doNothing(self, cmd):
-        print("Button pressed: " + cmd)
-
-    def __addLabel(self, parent, text, row, column):
-        label = Label(parent, text=text, fg="black", bg=self.backgroundColor)
-        label.grid(row=row, column=column, sticky=W)
-
-    def __addInputBox(self, parent, width, row, column):
-        inputBox = Entry(parent, width=width)
-        inputBox.grid(row=row, column=column, sticky=W)
-
-    def __addButton(self, parent, text, row, column, command):
-        button = Button(parent, text=text, fg="white", command=command, bg='grey')
-        button.config(width=10)
-        button.grid(row=row, column=column, padx=5, pady=5)
+        self.__displayLightingControlScreen()
 
     def updateGui(self):
         """
@@ -213,6 +178,67 @@ class SandScoop:
         self.root.grid()
         self.root.mainloop()
 
+    #//////////////////////////////////////////////////////////
+    #               PRIVATE FUNCTIONS
+    #//////////////////////////////////////////////////////////
+
+    def __displayLightingControlScreen(self):
+        var = DoubleVar()
+        scale = Scale(self.lightingControlFrame, variable=var)
+        scale.grid(row=0, column=0)
+
+        button = Button(self.lightingControlFrame, text="masterkey", fg="white", bg='grey', command=lambda: self.__updateLabel(scale.get()))
+        button.config(width=10)
+        button.grid(row=0, column=1, padx=5, pady=5)
+
+    def __displayNetworkScreen(self):
+        #self.__createTable(0, 16, 8, 8)
+
+        #TODO: add a command for transmission. Use BasicCom
+
+        #button = Button(self.netInfoFrame, text="masterkey", fg="white", bg='grey', command=self.__updateLabel)
+        button = Button(self.netInfoFrame, text="masterkey", fg="white", bg='grey', command=self.__updateOutput)
+        button.config(width=10)
+        button.grid(row=0, column=0, padx=5, pady=5)
+
+        label = Label(self.netInfoFrame, text="Next table", fg="black", bg="white")
+        #self.__addButton(self.netInfoFrame, 'Scan', 1, 0, )
+
+        label.grid(row=1, column=0, columnspan=1)
+        #self.__createTable(1, 50, 10, 10)
+
+    def __updateOutput(self):
+        text = Text(self.netInfoFrame)
+        self.ser.transmitData('scan')
+        #text.insert(0, )
+        text.grid()
+
+    # TODO: !!!!!!!
+    def __updateLabel(self, value):
+        #print(value)
+        self.ser.transmitData('scan') #+ str(value))
+
+    def __displayConfigScreen(self):
+        """
+        --------------------------------------------------
+        __displayConfigScreen()
+        --------------------------------------------------
+        Displays the widgets represented on the
+        configuration screen.
+        --------------------------------------------------
+        """
+        commands = ["channel", "childmax", "childtimeout",
+                    "dataset delay", "dataset panid", "netdataregister",
+                    "dataset active", "extaddr", "masterkey"]
+
+        labels = ["Channel: ", "Max children: ", "Child timeout: ",
+                  "Timer delay: ", "Panid: ",
+                  "Register local network: ", "Active timestamp: "
+                  "Extended address: ", "Master key: "]
+
+        for cmd in range(0, len(commands) -1):
+            self.__addBaseInputComponent(self.configFrame, labels[cmd], cmd, command=lambda cmd=cmd: self.__doNothing(commands[cmd]))
+
     def __createTable(self, row, maxCells, maxCol, tBreak):
         """
         --------------------------------------------------
@@ -223,25 +249,20 @@ class SandScoop:
         """
         #blankLabel = Label(self.root, text="", fg="black")
         #blankLabel.grid(row=row, sticky=W, columnspan=2)
-        thisRow = 0
+        #thisRow = 0
         for j in range(0, maxCells):
 
             label = Label(self.netInfoFrame, text=str(j), fg="black", bg="white")
-
-
-            '''tableCel = Entry(self.root, width="10")
-            tableCel.insert(0, str(j))
-            tableCel.config(state=DISABLED)
-            tableCel.config(disabledbackground="white")
-            tableCel.config(disabledforeground="black")'''
             if j % tBreak == 0:
-                thisRow += 1
-            label.grid(row=thisRow, column=j % maxCol, columnspan=1)
+                row+=1
+                self.currentFrameTableRow+=row
+                #thisRow += 1
+            label.grid(row=self.currentFrameTableRow, column=j % maxCol, columnspan=1)
 
     def __shutdown(self):
         answer = tkinter.messagebox.askquestion('Exit', 'Are you sure?')
         if answer == 'yes':
-            # ser.close()
+            self.ser.closeConnection()
             self.root.destroy()
 
     def __addMenu(self, text, cnt=1):
@@ -261,3 +282,24 @@ class SandScoop:
             # other menu items.
             if (self.subMenu.index('end') == self.cntMenuItems):
                 self.subMenu.add_command(label="Exit", command=self.__shutdown)
+
+    def __addBaseInputComponent(self, parent, label, row, command):
+        self.__addLabel(parent, label, row, 0)
+        self.__addInputBox(parent, 20, row, 1)
+        self.__addButton(parent, "submit", row, 2, command)
+
+    def __doNothing(self, cmd):
+        print("Button pressed: " + cmd)
+
+    def __addLabel(self, parent, text, row, column):
+        label = Label(parent, text=text, fg="black", bg=self.backgroundColor)
+        label.grid(row=row, column=column, sticky=W)
+
+    def __addInputBox(self, parent, width, row, column):
+        inputBox = Entry(parent, width=width)
+        inputBox.grid(row=row, column=column, sticky=W)
+
+    def __addButton(self, parent, text, row, column, command):
+        button = Button(parent, text=text, fg="white", command=command, bg='grey')
+        button.config(width=10)
+        button.grid(row=row, column=column, padx=5, pady=5)

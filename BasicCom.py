@@ -1,29 +1,22 @@
-"""
-//////////////////////////////////////////////////
---------------------------------------------------
-SANDSCOOP
---------------------------------------------------
-//////////////////////////////////////////////////
+# //////////////////////////////////////////////////
+# --------------------------------------------------
+# SANDSCOOP
+# --------------------------------------------------
+# //////////////////////////////////////////////////
+#
+# Developer     :   Rick Kock
+# Date          :   25/01/2017
+# Team members  :   David de Prez, Tim Spaans
+# Institution   :   Avans Hogeschool, Den Bosch
+#
+# //////////////////////////////////////////////////
 
-Developer     :   Rick Kock
-Date          :   25/01/2017
-Team members  :   David de Prez, Tim Spaans
-Institution   :   Avans Hogeschool, Den Bosch
-
-//////////////////////////////////////////////////
-"""
-
-from tkinter import ttk
-from tkinter import *
-import tkinter.messagebox
-from tkinter.scrolledtext import ScrolledText
+import serial
 
 class BasicCom:
-    stringBuffer = []
-    currentString = ''
 
-    def __init__(self):
-        self.currentString = 'None'
+    def __init__(self, port, baudrate):
+        self.ser = serial.Serial(port, baudrate, timeout=None)
 
     def validateStrings(self, input):
         """
@@ -37,39 +30,66 @@ class BasicCom:
 
     def transmitData(self, command):
         """
-        --------------------------------------------------
-        transmitData()
-        --------------------------------------------------
         Transmit data using pySerial. While waiting to
         receive the 'Done' keyword, no other data should
         be transmitted. This process should not be
         interfered. However, note that this may not be
         the final solution.
-        --------------------------------------------------
         """
+        self.ser.write(command.encode('ascii'))
 
     def receiveData(self):
-        """
-        --------------------------------------------------
-        receiveData()
-        --------------------------------------------------
-        As you receive data from a device, add the data
-        to a buffer. skip the command you've sent which
-        will (probably) also be included in the buffer.
-        Receive data until wait() returns false.
-        --------------------------------------------------
-        """
+        """Receive any data from device."""
+        dataBuffer = [0]
+        stringBuffer = []
+        index = 0
+        while (True):
+            # Insert any data you receive in buffer first.
+            self.ser.readinto(dataBuffer)
+            currentChar = bytearray(dataBuffer).decode('ascii')
+            # Check if the current character is relevant for
+            # processing the final list of characters.
+            if currentChar is '\r':
+                continue
+            # Skip the first character if it's a space.
+            if currentChar is ' ' and index is 0:
+                continue
+            stringBuffer.append(bytearray(dataBuffer).decode('ascii'))
+            index+=1
+            if stringBuffer[len(stringBuffer) - 1] == '>':
+                print("Done receiving data")
+                return stringBuffer
 
-    def wait(self, keyword):
+    def filter_answer(self, stringBuffer, lastCommand):
+        """Omit the command transmitted and the '>' character
+        To only get the answer."""
+        
+        # Iterate through the strings and
+        # compare the characters. If the characters
+        # match before a newline, discard whatever
+        # characters came befor it.
+        for letter in stringBuffer:
+            if letter is lastCommand[letter]:
+
+
+        '''if currentChar is '\r':
+            continue
+        # Skip the first character if it's a space.
+        if currentChar is ' ' and index is 0:
+            continue
+        stringBuffer.append(bytearray(dataBuffer).decode('ascii'))
+        index += 1
+        if stringBuffer[len(stringBuffer) - 1] == '>':
+            print("Done receiving data")
+            return stringBuffer'''
+
+    def __wait(self, keyword):
         """
-        --------------------------------------------------
-        wait()
-        --------------------------------------------------
         Wait for a particular keyword to be received. Once
         received, it means you've received all the data
         from the device and the program may proceed.
-        --------------------------------------------------
         """
+        self.__receiveData()
 
     def addDataToBuffer(self):
         """
@@ -96,11 +116,12 @@ class BasicCom:
 
     def areAllCommandsTransmitted(self, lastKeyword, cntCommands):
         """
-        --------------------------------------------------
-        areAllCommandsTransmitted()
-        --------------------------------------------------
         Checks to see if all commands that have been
         transmitted by waiting for the last keyword
         received.
-        --------------------------------------------------
         """
+
+    def closeConnection(self):
+        self.ser.close()
+
+#  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
