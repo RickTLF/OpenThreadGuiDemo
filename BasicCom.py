@@ -57,20 +57,31 @@ class BasicCom:
             stringBuffer.append(bytearray(dataBuffer).decode('ascii'))
             index+=1
             if stringBuffer[len(stringBuffer) - 1] == '>':
-                print("Done receiving data")
+                #print("Done receiving data")
                 return stringBuffer
 
     def filter_answer(self, stringBuffer, lastCommand):
         """Omit the command transmitted and the '>' character
         To only get the answer."""
-
+        tempString = ''
+        finalString = ''
+        finalStringBuf = []
         # Iterate through the strings and
         # compare the characters. If the characters
         # match before a newline, discard whatever
         # characters came befor it.
-        for letter in stringBuffer:
-            if letter is lastCommand[letter]:
+        for index in range(0, len(lastCommand)):
+            tempString+= stringBuffer[index]
+        #print(tempString)
 
+        if (tempString == lastCommand):
+            for index in range(0, (len(stringBuffer)-1) - len(lastCommand)):
+                finalString += stringBuffer[index + len(lastCommand)]
+
+        if (finalString.endswith("Done\n")):
+            #print("It ends with Done!")
+            finalStringBuf = finalString.split("Done\n")
+            print(finalStringBuf[0])
 
         '''if currentChar is '\r':
             continue

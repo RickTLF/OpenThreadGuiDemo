@@ -31,12 +31,14 @@ import time
 from BasicCom import BasicCom
 
 ser = BasicCom('COM4', 9600)
-ser.transmitData('channel\n')
-print(ser.receiveData())
-ser.transmitData('help\n')
-print(ser.receiveData())
-ser.transmitData('networkname\n')
-print(ser.receiveData())
+ser.transmitData('scan\n')
+#print(ser.receiveData())
+#ser.transmitData('help\n')
+#print(ser.receiveData())
+#ser.transmitData('networkname\n')
+#print(ser.receiveData())
+ser.filter_answer(ser.receiveData(), 'scan\n')
+
 ser.closeConnection()
 
 # reset_output_buffer()
