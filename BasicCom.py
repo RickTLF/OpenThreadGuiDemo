@@ -63,7 +63,7 @@ class BasicCom:
     def filter_answer(self, stringBuffer, lastCommand):
         """Omit the command transmitted and the '>' character
         To only get the answer."""
-        
+
         # Iterate through the strings and
         # compare the characters. If the characters
         # match before a newline, discard whatever
