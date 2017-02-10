@@ -18,6 +18,9 @@ class BasicCom:
     dataTransmitted = False
     dataReceived = False
 
+    dataBuffer = [0]
+    stringBuffer = []
+
     def __init__(self, port, baudrate):
         self.ser = serial.Serial(port, baudrate, timeout=None)
 
@@ -46,16 +49,14 @@ class BasicCom:
 
     def receiveData(self):
         """Receive any data from device."""
-        dataBuffer = [0]
-        stringBuffer = []
         index = 0
 
         print('Now receiving data...')
 
         while True:
             # Insert any data you receive in buffer first.
-            self.ser.readinto(dataBuffer)
-            currentChar = bytearray(dataBuffer).decode('ascii')
+            self.ser.readinto(self.dataBuffer)
+            currentChar = bytearray(self.dataBuffer).decode('ascii')
             # Check if the current character is relevant for
             # processing the final list of characters.
             if currentChar is '\r':
@@ -63,18 +64,15 @@ class BasicCom:
             # Skip the first character if it's a space.
             if currentChar is ' ' and index is 0:
                 continue
-            stringBuffer.append(bytearray(dataBuffer).decode('ascii'))
+            self.stringBuffer.append(bytearray(self.dataBuffer).decode('ascii'))
             index+=1
-            if stringBuffer[len(stringBuffer) - 1] == '>':
+            if self.stringBuffer[len(self.stringBuffer) - 1] == '>':
                 print("Done receiving data")
-                return stringBuffer
+                return True
 
 
-    def isDataReceived(self):
-        return self.dataReceived
-
-    def isDataTransmitted(self):
-        return self.dataTransmitted
+    def getReceivedData(self):
+        return self.stringBuffer
 
     def filter_answer(self, stringBuffer, lastCommand):
         """Omit the command transmitted and the '>' character

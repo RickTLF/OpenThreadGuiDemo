@@ -243,7 +243,6 @@ class SandScoop:
         # ser.filter_answer(ser.receiveData(), 'scan\n')
 
         self.__addBaseInputComponent(self.configFrame, 'label', 0, command=lambda: self.updateMessageBox(threadNetworkScanResults, 'networkname\n'))
-        #self.updateMessageBox(threadNetworkScanResults, 'networkname\n')
         threadNetworkScanResults.grid(row=1, column=0, columnspan=2)
 
     def __createTable(self, row, maxCells, maxCol, tBreak):
@@ -300,12 +299,12 @@ class SandScoop:
         textbox.insert(END, self.textBoxConfigMessage)
 
     def updateMessageBox(self, textbox, cmd):
-
-        # FIXME: program does not respond during receving
+        # FIXME: program does not respond during receiving
         self.ser.transmitData('networkname\n')
-        answer = self.ser.receiveData()
-        self.textBoxConfigMessage = self.ser.receiveData()
-        textbox.insert(END, self.textBoxConfigMessage)
+
+        if self.ser.receiveData() is True:
+            self.textBoxConfigMessage = ''.join(self.ser.getReceivedData())
+            textbox.insert(END, self.textBoxConfigMessage)
 
 
     def __addLabel(self, parent, text, row, column):
