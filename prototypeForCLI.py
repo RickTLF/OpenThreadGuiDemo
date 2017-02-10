@@ -30,7 +30,7 @@ import time
 
 from BasicCom import BasicCom
 
-dialog_gui = SandScoop('OpenThread Demo')
+dialog_gui = SandScoop('OpenThread Demo', port='COM4', baudrate=9600)
 dialog_gui.displayTabs()
 dialog_gui.constructGui()
 

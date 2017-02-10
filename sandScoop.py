@@ -46,14 +46,14 @@ class SandScoop:
     #               PUBLIC FUNCTIONS
     #//////////////////////////////////////////////////////////
 
-    def __init__(self, thisTitle, color='white'):
+    def __init__(self, thisTitle, port, baudrate,  color='white'):
         self.root.minsize(420, 350)
         self.root.maxsize(700, 500)
         self.backgroundColor = color
         self.root.configure(background=self.backgroundColor)
         self.root.title(thisTitle)
         self.__addMenu('File', 0)
-        #self.ser = BasicCom(5)
+        self.ser = BasicCom(port, baudrate)
 
     def displayTabs(self):
         """
@@ -180,7 +180,7 @@ class SandScoop:
         self.root.mainloop()
 
     #//////////////////////////////////////////////////////////
-    #               PRIVATE FUNCTIONS
+    #               PUBLIC FUNCTIONS
     #//////////////////////////////////////////////////////////
 
     def __displayLightingControlScreen(self):
@@ -237,8 +237,13 @@ class SandScoop:
         threadNetworkScanResults = Text(self.configFrame, height=5, width=20)
 
         # TODO: Change to a method concerning openThread
-        self.__addBaseInputComponent(self.configFrame, 'label', 0, command=lambda: self.__doNothing('Hi', threadNetworkScanResults))
 
+        # ser.transmitData('networkname\n')
+        # print(ser.receiveData())
+        # ser.filter_answer(ser.receiveData(), 'scan\n')
+
+        self.__addBaseInputComponent(self.configFrame, 'label', 0, command=lambda: self.updateMessageBox(threadNetworkScanResults, 'networkname\n'))
+        #self.updateMessageBox(threadNetworkScanResults, 'networkname\n')
         threadNetworkScanResults.grid(row=1, column=0, columnspan=2)
 
     def __createTable(self, row, maxCells, maxCol, tBreak):
@@ -293,6 +298,15 @@ class SandScoop:
     def __doNothing(self, cmd, textbox):
         self.textBoxConfigMessage = cmd + '\n'
         textbox.insert(END, self.textBoxConfigMessage)
+
+    def updateMessageBox(self, textbox, cmd):
+
+        # FIXME: program does not respond during receving
+        self.ser.transmitData('networkname\n')
+        answer = self.ser.receiveData()
+        self.textBoxConfigMessage = self.ser.receiveData()
+        textbox.insert(END, self.textBoxConfigMessage)
+
 
     def __addLabel(self, parent, text, row, column):
         label = Label(parent, text=text, fg="black", bg=self.backgroundColor)

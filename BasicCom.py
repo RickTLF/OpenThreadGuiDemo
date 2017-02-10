@@ -15,6 +15,9 @@ import serial
 
 class BasicCom:
 
+    dataTransmitted = False
+    dataReceived = False
+
     def __init__(self, port, baudrate):
         self.ser = serial.Serial(port, baudrate, timeout=None)
 
@@ -36,14 +39,20 @@ class BasicCom:
         interfered. However, note that this may not be
         the final solution.
         """
+        print('Transmitting data: ' + command)
+        print('Data received: ' + str(self.dataReceived))
         self.ser.write(command.encode('ascii'))
+        print(str(self.dataTransmitted))
 
     def receiveData(self):
         """Receive any data from device."""
         dataBuffer = [0]
         stringBuffer = []
         index = 0
-        while (True):
+
+        print('Now receiving data...')
+
+        while True:
             # Insert any data you receive in buffer first.
             self.ser.readinto(dataBuffer)
             currentChar = bytearray(dataBuffer).decode('ascii')
@@ -57,8 +66,15 @@ class BasicCom:
             stringBuffer.append(bytearray(dataBuffer).decode('ascii'))
             index+=1
             if stringBuffer[len(stringBuffer) - 1] == '>':
-                #print("Done receiving data")
+                print("Done receiving data")
                 return stringBuffer
+
+
+    def isDataReceived(self):
+        return self.dataReceived
+
+    def isDataTransmitted(self):
+        return self.dataTransmitted
 
     def filter_answer(self, stringBuffer, lastCommand):
         """Omit the command transmitted and the '>' character
