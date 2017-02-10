@@ -26,6 +26,7 @@ class SandScoop:
     backgroundColor = ""
     menu = Menu(root)
     subMenu = Menu(menu)
+    textBoxConfigMessage = ''
 
     cntMenuItems = 0
 
@@ -52,7 +53,7 @@ class SandScoop:
         self.root.configure(background=self.backgroundColor)
         self.root.title(thisTitle)
         self.__addMenu('File', 0)
-        self.ser = BasicCom(5)
+        #self.ser = BasicCom(5)
 
     def displayTabs(self):
         """
@@ -219,15 +220,8 @@ class SandScoop:
         self.ser.transmitData('scan') #+ str(value))
 
     def __displayConfigScreen(self):
-        """
-        --------------------------------------------------
-        __displayConfigScreen()
-        --------------------------------------------------
-        Displays the widgets represented on the
-        configuration screen.
-        --------------------------------------------------
-        """
-        commands = ["channel", "childmax", "childtimeout",
+        """ Displays the widgets represented on the configuration screen."""
+        '''commands = ["channel", "childmax", "childtimeout",
                     "dataset delay", "dataset panid", "netdataregister",
                     "dataset active", "extaddr", "masterkey"]
 
@@ -237,7 +231,15 @@ class SandScoop:
                   "Extended address: ", "Master key: "]
 
         for cmd in range(0, len(commands) -1):
-            self.__addBaseInputComponent(self.configFrame, labels[cmd], cmd, command=lambda cmd=cmd: self.__doNothing(commands[cmd]))
+            self.__addBaseInputComponent(self.configFrame, labels[cmd], cmd, command=lambda cmd=cmd: self.__doNothing(commands[cmd]))'''
+
+        # Add a text-area representing the output
+        threadNetworkScanResults = Text(self.configFrame, height=5, width=20)
+
+        # TODO: Change to a method concerning openThread
+        self.__addBaseInputComponent(self.configFrame, 'label', 0, command=lambda: self.__doNothing('Hi', threadNetworkScanResults))
+
+        threadNetworkScanResults.grid(row=1, column=0, columnspan=2)
 
     def __createTable(self, row, maxCells, maxCol, tBreak):
         """
@@ -288,8 +290,9 @@ class SandScoop:
         self.__addInputBox(parent, 20, row, 1)
         self.__addButton(parent, "submit", row, 2, command)
 
-    def __doNothing(self, cmd):
-        print("Button pressed: " + cmd)
+    def __doNothing(self, cmd, textbox):
+        self.textBoxConfigMessage = cmd + '\n'
+        textbox.insert(END, self.textBoxConfigMessage)
 
     def __addLabel(self, parent, text, row, column):
         label = Label(parent, text=text, fg="black", bg=self.backgroundColor)
